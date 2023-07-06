@@ -1,0 +1,4 @@
+venv/
+pytonlib/
+.idea/
+.env
