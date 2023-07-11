@@ -10,12 +10,27 @@ bet_col = ton_bot_db["bets"]
 
 def bot_col_init():
     if bot_col.count_documents({}) == 0:
-        data = [
-            {'id': '0', 'template': 'UP', 'active': 'true', 'min_money': 'true'},
-            {'id': '1', 'template': 'DOWN', 'active': 'true', 'min_money': 'true'},
-            {'id': '1', 'template': 'NO_CHANGE', 'active': 'true', 'min_money': 'true'}
+        bot_init_data = [
+            {'id': 0, 'template': 'UP', 'active': 1, 'min_money': 1,
+             'address': 'EQDyegU155LTDQrQYSAp-cDYG41YTK-crIkxdEx1DV4A3-CK',
+             'seed': ['crush', 'brand', 'kid', 'night', 'foster', 'fuel', 'divide', 'curtain', 'wish', 'evoke',
+                      'father', 'decline', 'album', 'cable', 'oblige', 'mercy', 'sphere', 'chest', 'ghost', 'almost',
+                      'shell', 'escape', 'aim', 'limb']
+             },
+            {'id': 1, 'template': 'DOWN', 'active': 1, 'min_money': 1,
+             'address': 'EQAJdaddEC1EUMEFbLcJw6Kn6pkSuWOFWQu5mTEMcmQZwffL',
+             'seed': ['laptop', 'dragon', 'income', 'decade', 'coral', 'genius', 'conduct', 'song', 'citizen',
+                      'diagram', 'exist', 'garage', 'today', 'amused', 'page', 'talent', 'salt', 'play', 'pair',
+                      'eyebrow', 'witness', 'attitude', 'come', 'profit']
+             },
+            {'id': 2, 'template': 'NO_CHANGE', 'active': 1, 'min_money': 0,
+             'address': 'EQCBwpZwgGEzzX58qITrPWf0-Kvhy9fTuqJLKK1yISt4RVqm',
+             'seed': ['pause', 'kidney', 'april', 'disagree', 'dust', 'nut', 'sunny', 'earth', 'fee', 'fiscal',
+                      'carbon', 'champion', 'conduct', 'leisure', 'tuna', 'kid', 'frame', 'skull', 'pulse', 'calm',
+                      'denial', 'emerge', 'pottery', 'nut']
+             }
         ]
-        bot_col.insert_many(data)
+        bot_col.insert_many(bot_init_data)
         print('Данные успешно добавлены.')
     else:
         print('Данные уже присутствуют в коллекции.')

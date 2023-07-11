@@ -6,7 +6,7 @@ def get_active_games():
     json_response = response.json()
     active_games_id = []
     for x in json_response:
-        if 0 < x['statistics']['increase_votes'] + x['statistics']['decrease_votes'] + \
+        if -1 < x['statistics']['increase_votes'] + x['statistics']['decrease_votes'] + \
                 x['statistics']['no_change_votes'] < 6: # Диапазон чисел определяющий возможное количество участников в игре
             active_games_id.append(x['id'])
 

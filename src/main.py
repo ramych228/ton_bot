@@ -1,9 +1,17 @@
-from pytonlib.ton.sync import TonlibClient
+from db_requests import find_good_bots
+from api_requests import get_active_games
 
-client = TonlibClient()
-TonlibClient.enable_unaudited_binaries()
-client.init_tonlib(cdll_path='./libtonlibjson.so')
+if __name__ == '__main__':
+    bot = find_good_bots()
 
-wallet = client.create_wallet()
-print('Wallet address:', wallet.address)
-print('Seed:', wallet.export())
+    if bot:  # надо придумать поизящней решение
+        try:
+            game_address = get_active_games()[0]
+
+            template = bot["template"]
+
+
+            print(game_address + "-" + template)
+
+        except IndexError:
+            print("No available games")
