@@ -1,0 +1,4 @@
+pymongo==4.4.0
+requests==2.31.0
+ton==0.26
+tonsdk==1.0.13
