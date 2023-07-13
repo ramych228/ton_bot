@@ -16,6 +16,7 @@ def bot_col_init():
              'seed': ['crush', 'brand', 'kid', 'night', 'foster', 'fuel', 'divide', 'curtain', 'wish', 'evoke',
                       'father', 'decline', 'album', 'cable', 'oblige', 'mercy', 'sphere', 'chest', 'ghost', 'almost',
                       'shell', 'escape', 'aim', 'limb']
+             # это надо убрать отсюда очевидно, но я не очень понимаю куда и как
              },
             {'id': 1, 'template': 'DOWN', 'active': 1, 'min_money': 1,
              'address': 'EQAJdaddEC1EUMEFbLcJw6Kn6pkSuWOFWQu5mTEMcmQZwffL',

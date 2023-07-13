@@ -14,4 +14,5 @@ def get_active_games():
 
 
 if __name__ == '__main__':
-    print(get_active_games())
+    r = requests.get("https://app.tonkeeper.com/transfer/EQC2hxtAOioThqliO_U3pinztJQnNj90IpFKCF92E9cpKBZb?text=64ae95f12a0fca5568db6c21-UP")
+    print(r) # вопрос, как нормально сделать этот самый запрос
