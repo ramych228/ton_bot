@@ -9,6 +9,8 @@ bet_col = ton_bot_db["bets"]
 
 
 def bot_col_init():
+    # TODO: удаляем данные из базы, если есть старые, так как инициализация игры должна происходить из конфига
+    # TODO: Не храним сиды в базе, получаем из конфига и храним в оперативной памяти
     if bot_col.count_documents({}) == 0:
         bot_init_data = [
             {'id': 0, 'template': 'UP', 'active': 1, 'min_money': 1,

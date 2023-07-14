@@ -1,3 +1,4 @@
+# TODO: все интеграции выносим в /services
 import requests
 
 def get_active_games():
