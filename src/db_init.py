@@ -12,6 +12,7 @@ def bot_col_init():
     print('Данные успешно добавлены.')
 
 
+# TODO: так не делаем, не видно, что этот код выполняется
 if __name__ == '__main__':
     bot_col_init()
     for x in bot_col.find():
