@@ -1,30 +1,48 @@
+import asyncio
+import time
 from database.bots import get_good_bots, update_min_money
 from db_init import bot_col_init
 from services.bookmaker_api import BookMakerAPI
 from services.ton_connector import TonConnector
+from services.wallet_management import WalletManagement
 from config import BotConfigs, start_config
 
-if __name__ == '__main__':
+
+async def polling():
     start_config()
-    bot_config = BotConfigs()
-
-    bookmaker = BookMakerAPI('https://bookmakerapi.startech.live')
-
-    connector = TonConnector()
-    wallet_client = connector.client
-    seed = bot_config.BOT_SEEDS["SEED_BOT0"]
-    wallet = connector.client.import_wallet(seed)
-
     bot_col_init()
-    bot = get_good_bots()
+    bot_config = BotConfigs()
+    bookmaker = BookMakerAPI('https://bookmakerapi.startech.live')
+    connector = TonConnector()
 
-    if bot:
-        try:
-            game_address = bookmaker.get_active_games()[0]
+    while True:
+        bot = get_good_bots()
 
-            template = bot["template"]
+        if bot:
 
-            print(game_address + "-" + template)
+            seed = bot_config.BOT_SEEDS["SEED_BOT" + str(bot["id"])]
+            print(bot, seed)
 
-        except IndexError:
-            print("No available games")
+            try:
+                wallet_manager = WalletManagement(connector)
+                await wallet_manager.async_init(seed)
+                wallet = wallet_manager.wallet
+                x = await wallet_manager.get_min_money()
+                print(x)
+                game_address = bookmaker.get_active_games()[0]
+
+                template = bot["template"]
+
+                print(game_address + "-" + template)
+
+            except IndexError:
+                print("No available games")
+        await asyncio.sleep(1)
+
+
+async def main():
+    await polling()
+
+
+if __name__ == '__main__':
+    asyncio.run(main())
