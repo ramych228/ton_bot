@@ -2,6 +2,7 @@ import asyncio
 import time
 from config import BotConfigs, start_config
 from database.bots import get_good_bot, update_min_money
+from database.bets import put_new_bet
 from db_init import bot_col_init
 from services.bookmaker_api import BookMakerAPI
 from services.ton_connector import TonConnector
@@ -14,6 +15,7 @@ async def polling():
     bot_config = BotConfigs()
     bookmaker = BookMakerAPI()
     connector = TonConnector()
+    min_end_time = None
 
     while True:
 
@@ -25,23 +27,32 @@ async def polling():
             print(bot, seed)
 
             try:
-                wallet_manager = WalletManagement(connector)
-                await wallet_manager.async_init(seed)
+                wallet_manager = WalletManagement(connector, seed)
+                await wallet_manager.async_init()
 
-                x = await wallet_manager.get_min_money()
-                print(x)
                 cur_game = bookmaker.get_active_games()[0]
                 cur_game_id = cur_game.get("id")
+                cur_game_recipient = cur_game.get("recipient")
                 cur_game_end_time = cur_game.get("end_time")
 
-                template = bot["template"]
-                # TODO: хорошо было бы потом не забыть добавить проверку последних транзакций у бота, чтобы если
-                #  приложение сломается и будут бесконечные рестарты, у тебя деньги с ботов утекут в одну игру
-                print(cur_game_id + "-" + template)
+                txs = await wallet_manager.wallet.get_transactions()
+                print(txs)
+
+                comment = cur_game_id + "-" + bot['template']
+                bet_value = 0.001
+
+                await wallet_manager.transfer_money(cur_game_recipient, bet_value, comment)
+                await put_new_bet(bet_value=bet_value, bot_id=bot["id"], game_id=cur_game_id,
+                                  end_time=cur_game_end_time)
+
+                min_end_time = min(min_end_time, cur_game_end_time) # надо пофиксить, когда поллинг доделывать буду
 
             except IndexError:
                 print("No available games")
-        await asyncio.sleep(1)
+            except:
+                print("Unknown error")
+
+        await asyncio.sleep(min_end_time - time.time() + 10) # ждем конца ближайшей игры -> бот освободится
 
 
 async def main():

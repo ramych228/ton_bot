@@ -2,21 +2,19 @@ from .ton_connector import TonConnector
 
 
 class WalletManagement:
-    def __init__(self, ton_connector: TonConnector):
+    def __init__(self, ton_connector: TonConnector, seed: [str]):
         self.wallet = None
         self.ton_connector = ton_connector
         self.client = ton_connector.client
+        self.seed = seed
 
-    async def async_init(self, seed):
-        # TODO: мы не можем инициализировать один класс для нескольких кошельков, поэтому принимать сид в аргументах этой функции не нужно, перенести в инициализацию самого класса
+    async def async_init(self):
         await TonConnector.async_init(self.ton_connector)
-        self.wallet = await self.client.import_wallet(str(seed), source="v4r2")
+        self.wallet = await self.client.import_wallet(str(self.seed))
 
-    async def get_min_money(self):
-        # TODO: относится внимательней к неймингу
-        # get_min_money -> получить минимум денег, это верно? тем более отдаешь bool -> is_empty лучше?
+    async def have_min_money(self): # TODO: как его назвать нормально? is_empty не совсем верно
         balance = await self.wallet.get_balance()
-        return balance > 0
+        return balance > 0  # вообще, здесь должен быть не 0, это временное решение в тз по-другому
 
-    async def transfer_money(self, recipient_address: str, value: int, comment: str):
+    async def transfer_money(self, recipient_address: str, value: float, comment: str):
         await self.wallet.transfer(recipient_address, self.client.to_nano(value), comment=comment)

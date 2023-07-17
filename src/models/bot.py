@@ -5,4 +5,4 @@ class Bot(BaseModel):
     id: int
     template: str # мб поменять надо
     active: int
-    min_money: int
+    have_min_money: int
