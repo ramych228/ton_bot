@@ -1,5 +1,3 @@
-import asyncio
-
 from .ton_connector import TonConnector
 
 
@@ -18,18 +16,4 @@ class WalletManagement:
         return balance > 0
 
     async def transfer_money(self, recipient_address: str, value: int, comment: str):
-        await self.wallet.transfer(recipient_address, self.client.to_nano(value), comment=str)
-
-
-async def my_coroutine():
-    tc = TonConnector()
-    con = WalletManagement(tc)
-    await con.try1()
-
-
-async def main():
-    await my_coroutine()
-
-
-if __name__ == '__main__':
-    asyncio.run(main())
+        await self.wallet.transfer(recipient_address, self.client.to_nano(value), comment=comment)

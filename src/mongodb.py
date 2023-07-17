@@ -1,14 +1,14 @@
 import os
-from pymongo import MongoClient
+import motor.motor_asyncio
+from config import start_config
 
+start_config()
 USER = os.environ.get("MONGO_INITDB_ROOT_USERNAME")
 PASS = os.environ.get("MONGO_INITDB_ROOT_PASSWORD")
 
-uri = 'mongodb://{}:{}@localhost:27017/'.format(USER, PASS)
+uri = "mongodb://{}:{}@localhost:27017/".format(USER, PASS)
 
-# client = MongoClient(uri) надо это нормально сделать, но не могу подключить нормально HELP
-
-client = MongoClient('mongodb://root:example@localhost:27017/')
+client = motor.motor_asyncio.AsyncIOMotorClient(uri)
 
 ton_bot_db = client["ton_bot"]
 
