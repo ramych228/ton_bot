@@ -11,3 +11,11 @@ async def put_new_bet(bet_value: float, end_time: int, bot_id: int, game_id: str
         end_time=end_time,
     )
     await bet_col.insert_one(bet.model_dump())
+
+
+async def get_all_bets():
+    all_docs = []
+    cursor = bet_col.find({})
+    for doc in cursor:
+        all_docs.append(doc)
+    return all_docs
