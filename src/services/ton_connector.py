@@ -12,4 +12,4 @@ class TonConnector:
 
     async def async_init(self):
         await self.client.init_tonlib()
-        print("Асинхронная инициализация выполнена")
+        print("ton_client init successfully")

@@ -13,7 +13,7 @@ async def put_new_bet(bet_value: float, end_time: int, bot_id: int, game_id: str
     await bet_col.insert_one(bet.model_dump())
 
 
-async def get_all_bets():
-    cursor = await bet_col.find({}).to_list(2)
-
-    return cursor
+async def add_bet_result(result: int, game_id: str):
+    bet = await bet_col.find_one({'game_id': game_id})
+    bet["result"] = result
+    await bet_col.replace_one({'id': game_id}, bet)  # replace_many?
