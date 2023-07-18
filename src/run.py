@@ -13,7 +13,7 @@ async def polling():
     await bet_col_init()
     bot_wallets = await bot_wallets_init()
     bookmaker = BookMakerAPI()
-    min_end_time = 0
+    min_end_time = time.time() + 1e9
 
     while True:
 
@@ -22,11 +22,6 @@ async def polling():
         if bot:
 
             try:
-                #
-                # bets = await get_all_bets()
-                # for x in bets:
-                #     print(x)
-
                 wallet_manager = bot_wallets[bot["id"]]
 
                 cur_game = bookmaker.get_active_games()[0]
@@ -34,24 +29,25 @@ async def polling():
                 cur_game_recipient = cur_game.get("recipient")
                 cur_game_end_time = cur_game.get("end_time")
 
-                txs = await wallet_manager.wallet.get_balance()
-                print(txs)
-
                 comment = cur_game_id + "-" + bot['template']
                 bet_value = 0.001
 
-                # await wallet_manager.transfer_money(cur_game_recipient, bet_value, comment)
-                # await put_new_bet(bet_value=bet_value, bot_id=bot["id"], game_id=cur_game_id,
-                #                   end_time=cur_game_end_time)
+                await wallet_manager.transfer_money(cur_game_recipient, bet_value, comment)
+                await put_new_bet(bet_value=bet_value, bot_id=bot["id"], game_id=cur_game_id,
+                                  end_time=cur_game_end_time)
 
+                txs = await get_all_bets()
+
+                for x in txs:
+                    print(x)
 
                 min_end_time = min(min_end_time, cur_game_end_time)  # надо пофиксить, когда поллинг доделывать буду
 
             except IndexError:
                 print("No available games")
-            except:
-                print("Unknown error")
-
+            except Exception as e:
+                print(e)
+        print(min_end_time, time.time())
         await asyncio.sleep(min_end_time - time.time() + 10)  # ждем конца ближайшей игры -> бот освободится
 
 

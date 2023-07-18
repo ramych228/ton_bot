@@ -14,8 +14,6 @@ async def put_new_bet(bet_value: float, end_time: int, bot_id: int, game_id: str
 
 
 async def get_all_bets():
-    all_docs = []
-    cursor = bet_col.find({})
-    for doc in cursor:
-        all_docs.append(doc)
-    return all_docs
+    cursor = await bet_col.find({}).to_list(2)
+
+    return cursor

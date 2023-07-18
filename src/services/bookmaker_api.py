@@ -1,10 +1,5 @@
-import asyncio
-
 import requests
 import datetime
-
-from database.bets import put_new_bet, get_all_bets
-from db_init import bet_col_init
 
 
 def timestamp_to_seconds(timestamp: str):
@@ -27,7 +22,8 @@ class BookMakerAPI:
 
         active_games = []
         for x in response:
-            if -1 < x['statistics']['increase_votes'] + x['statistics']['decrease_votes'] + x['statistics']['no_change_votes'] < 6:
+            if -1 < x['statistics']['increase_votes'] + x['statistics']['decrease_votes'] + x['statistics'][
+                'no_change_votes'] < 6:
                 active_games.append({'id': x['id'], 'end_time': timestamp_to_seconds(x['finished_date']),
                                      'recipient': x['address']})
 
@@ -47,17 +43,3 @@ class BookMakerAPI:
         url = self.base_url + endpoint
         response = requests.delete(url, headers=headers)
         return response.json()
-
-
-async def polling():
-    await bet_col_init()
-    x = await get_all_bets()
-    print(x)
-
-
-async def main():
-    await polling()
-
-
-if __name__ == '__main__':
-    asyncio.run(main())
