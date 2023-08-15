@@ -2,4 +2,4 @@ venv/
 pytonlib/
 src/.keystore
 .idea/
-.env
+src/.env
